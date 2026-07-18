@@ -6,7 +6,7 @@
   <title>UI-variant B — kaart met zwevend paneel</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="../dist/jbstone-map.min.css?v=7">
+  <link rel="stylesheet" href="../dist/jbstone-map.min.css?v=8">
   <style>
     /* Alleen demo-chrome; alles binnen .jb-locator komt uit de bundle-css. */
     body { margin: 0; background: #fff; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #000; }
@@ -14,22 +14,6 @@
     .demo-kicker { text-align: center; font-size: 16px; margin: 0 0 4px; }
     .demo-title { text-align: center; font-size: 36px; font-weight: 700; margin: 0 0 40px; }
   
-    /* Variant B: overlay-paneel op een brede kaart */
-    @media (min-width: 992px) {
-      .jb-locator { position: relative; display: block; }
-      #jb-map { height: 76vh; min-height: 520px; position: relative; top: 0; }
-      #jb-side {
-        position: absolute; top: 24px; right: 24px; bottom: 24px;
-        width: 400px; height: auto; min-height: 0;
-        background: #fff; border-radius: 16px;
-        box-shadow: 0 12px 40px rgba(0,0,0,.18);
-        padding: 22px; z-index: 500;
-        display: flex; flex-direction: column;
-      }
-      .jb-list::after { bottom: -28px; }
-      /* zoomknoppen links, anders vallen ze achter het paneel */
-      .jb-locator .leaflet-top.leaflet-right { left: 12px; right: auto; }
-    }
   </style>
 </head>
 <body>
@@ -37,7 +21,7 @@
     <p class="jb-kicker">Hier kun je ons vinden</p>
     <h2 class="jb-titel">JB Stone Dealers</h2>
 
-    <div class="jb-locator">
+    <div class="jb-locator jb-locator--overlay">
       <div id="jb-map"></div>
       <div id="jb-side"></div>
     </div>
@@ -46,6 +30,7 @@
     <div class="jb-dealerdata" aria-hidden="true">
       <div class="jb-dealer"
            data-slug="buiter-beton-balkbrug"
+           data-route="https://maps.app.goo.gl/qfXvwfXaL1bHwDcn8"
            data-name="Buiter Beton"
            data-plaats="Balkbrug"
            data-straat="Hoogeveenseweg 27"
@@ -58,6 +43,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="tegelhandelboer-capelle-aan-den-yssel"
+           data-route="https://www.google.com/maps/dir//Boer+Tegelhandel,+Bermweg+550,+2907+LE+Capelle+aan+den+IJssel,+Netherlands"
            data-name="Tegelhandelboer"
            data-plaats="Capelle aan den IJssel"
            data-straat="Bermweg 550"
@@ -70,6 +56,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="livingstone"
+           data-route="https://maps.app.goo.gl/DnHdCwnf4w8n5wFj8"
            data-name="Livingstone"
            data-plaats="Goes"
            data-straat="Livingstoneweg 2"
@@ -82,6 +69,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="buiter-beton-heemskerk"
+           data-route="https://maps.app.goo.gl/cNK2Rm7iN6YXhxKJ8"
            data-name="Buiter Beton"
            data-plaats="Heemskerk"
            data-straat="Ambachtsring 13"
@@ -94,6 +82,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="buiter-beton-hengelo"
+           data-route="https://maps.app.goo.gl/ZfzwbmVv1ShCqWJT6"
            data-name="Buiter Beton"
            data-plaats="Hengelo"
            data-straat="Torenlaan 38"
@@ -106,6 +95,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="sloos-tegels"
+           data-route="https://maps.app.goo.gl/ZzYkkUd5HxaowwW59"
            data-name="Sloos Tegels"
            data-plaats="Leiden"
            data-straat="Admiraal Helfrichweg 1"
@@ -118,6 +108,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="buiter-beton-naarden"
+           data-route="https://maps.app.goo.gl/VB3XdTpJt5AddDCb6"
            data-name="Buiter Beton"
            data-plaats="Naarden"
            data-straat="Rijksweg 91"
@@ -130,6 +121,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="tegelhandelboer-nieuw-lekkerland"
+           data-route="https://www.google.com/maps/dir//Tegelhandel+Boer+-+Nieuw-Lekkerland,+Planetenlaan+75,+2957+SM+Nieuw-Lekkerland,+Netherlands"
            data-name="Tegelhandelboer"
            data-plaats="Nieuw-Lekkerland"
            data-straat="Planetenlaan 75"
@@ -142,6 +134,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="j-j-van-gurp"
+           data-route="https://maps.app.goo.gl/AhG3xKg7vvJN1bGM6"
            data-name="J &amp; J van Gurp"
            data-plaats="Ooltgensplaat"
            data-straat="Oudedijk 14"
@@ -154,6 +147,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="tegelhandelboer-raamsdonksveer"
+           data-route="https://www.google.com/maps/dir//Tegelhandel+Boer,+Oosterhoutseweg+73+D,+4941+WX+Raamsdonksveer,+Netherlands"
            data-name="Tegelhandelboer"
            data-plaats="Raamsdonksveer"
            data-straat="Oosterhoutseweg 73 D"
@@ -166,6 +160,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="tegelhandelboer-ridderkerk"
+           data-route="https://www.google.com/maps/dir//Tegelhandel+Boer,+Rijksstraatweg+160A,+2988+BM+Ridderkerk,+Netherlands"
            data-name="Tegelhandelboer"
            data-plaats="Ridderkerk"
            data-straat="Rijksstraatweg 160A"
@@ -178,6 +173,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="den-engelsman-tuinmaterialen"
+           data-route="https://www.google.com/maps/dir//Den+Engelsman+Tuinmaterialen,+Veilingweg+9,+4697+RB+Sint-Annaland,+Netherlands"
            data-name="Den Engelsman Tuinmaterialen"
            data-plaats="Sint-Annaland"
            data-straat="Veilingweg 9"
@@ -190,6 +186,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="tegelhandelboer-standdaarbuiten"
+           data-route="https://www.google.com/maps/dir//Tegelhandel+Boer+Standdaarbuiten,+Molenstraat+34,+4758+AB+Standdaarbuiten,+Netherlands"
            data-name="Tegelhandelboer"
            data-plaats="Standdaarbuiten"
            data-straat="Molenstraat 34"
@@ -202,6 +199,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="biesheuvel-groenprojecten"
+           data-route="https://maps.app.goo.gl/RHeTrKHFtFDPUkgd8"
            data-name="Biesheuvel Groenprojecten"
            data-plaats="Strijen"
            data-straat="Weelsedijk 61C"
@@ -214,6 +212,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="van-der-heijden-sierbestrating"
+           data-route="https://www.google.com/maps/dir//van+der+Heijden+Sierbestrating,+Donkenweg+7,+4724+SN+Wouw,+Netherlands"
            data-name="Van Der Heijden Sierbestrating"
            data-plaats="Wouw"
            data-straat="Donkenweg 7"
@@ -226,6 +225,7 @@
       </div>
       <div class="jb-dealer"
            data-slug="pekaar"
+           data-route="https://maps.app.goo.gl/V2ZhtYA9Z4LxjAAi7"
            data-name="Pekaar"
            data-plaats="Yerseke"
            data-straat="Kanaalweg 83"
@@ -241,6 +241,6 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="../dist/jbstone-map.min.js?v=7" defer></script>
+  <script src="../dist/jbstone-map.min.js?v=8" defer></script>
 </body>
 </html>

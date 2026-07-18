@@ -99,6 +99,44 @@
   }
 }
 
+/* ---------- overlay-layout (opt-in): kaart full-width, paneel zweeft rechts ----------
+   Zet hiervoor de class jb-locator--overlay op de .jb-locator div.
+   De JS detecteert dit vanzelf (computed position van #jb-side) en centreert
+   alle kaartfocus in de vrije strook links van het paneel. */
+@media (min-width: 992px) {
+  .jb-locator--overlay {
+    position: relative;
+    display: block;
+  }
+  .jb-locator--overlay #jb-map {
+    position: relative;
+    top: 0;
+    height: 76vh;
+    min-height: 520px;
+  }
+  .jb-locator--overlay #jb-side {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    bottom: 24px;
+    width: 400px;
+    height: auto;
+    min-height: 0;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+    padding: 22px;
+    z-index: 500; /* boven de kaartpanes (≤400), onder de popups (700) */
+    display: flex;
+    flex-direction: column;
+  }
+  /* Zoomknoppen naar links, anders vallen ze achter het paneel */
+  .jb-locator--overlay .leaflet-top.leaflet-right {
+    left: 12px;
+    right: auto;
+  }
+}
+
 /* De databron (verborgen Collection List): crawlbaar maar visueel weg.
    Nooit display:none gebruiken (PRD §9.1). */
 .jb-dealerdata {
