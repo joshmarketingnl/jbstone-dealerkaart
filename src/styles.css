@@ -468,10 +468,15 @@
   color: #555;
 }
 .jb-popup__tel {
+  /* !important: de site zet globale a-styling (text-align:center, padding)
+     die het nummer anders midden in de popup laat zweven. */
   font-size: 14px;
   color: var(--jb-blue);
   text-decoration: none;
-  margin-top: 4px;
+  margin: 4px 0 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  align-self: flex-start;
 }
 .jb-popup__tel:hover {
   text-decoration: underline;
