@@ -31,11 +31,14 @@ function popupHtml(dealer) {
   const dealerLink = dealer.url
     ? `<a class="jb-popup__btn" href="${esc(dealer.url)}">Bekijk dealer&nbsp;&rsaquo;</a>`
     : '';
+  // Het CMS heeft één adresveld (straat + postcode + plaats in één string);
+  // lege delen niet met een losse komma tonen.
+  const adres = [dealer.straat, dealer.postcode].filter(Boolean).join(', ');
   return (
     `<div class="jb-popup">` +
     `<strong class="jb-popup__name">${esc(dealer.name)}</strong>` +
     `<span class="jb-popup__plaats">${esc(dealer.plaats)}</span>` +
-    `<span class="jb-popup__adres">${esc(dealer.straat)}, ${esc(dealer.postcode)}</span>` +
+    (adres ? `<span class="jb-popup__adres">${esc(adres)}</span>` : '') +
     tel +
     `<div class="jb-popup__actions">` +
     dealerLink +

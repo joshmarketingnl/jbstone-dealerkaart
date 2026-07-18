@@ -30,6 +30,9 @@ export function readDealers(root = document) {
       console.warn('[jbstone-map] Dealer zonder geldige lat/lng, geen pin op de kaart:', d.slug || d.name || el);
     }
     if (!d.slug) d.slug = `dealer-${dealers.length}`;
+    // Webflow kan in attribuut-bindingen niet concatenaten ("/loactions/" + slug),
+    // dus zonder expliciete data-url leiden we hem hier af. Typo-prefix is bewust (PRD §4).
+    if (!d.url && !d.slug.startsWith('dealer-')) d.url = `/loactions/${d.slug}`;
     dealers.push(d);
   });
 
