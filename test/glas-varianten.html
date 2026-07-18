@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glas-varianten — kies je favoriet</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+
+  /* ---- Drukke nep-kaartachtergrond met veel kleur (vast, kaarten scrollen eroverheen) ---- */
+  .achtergrond {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      /* waterpartijen */
+      radial-gradient(220px 160px at 15% 20%, #a8cdf0 0 60%, transparent 61%),
+      radial-gradient(300px 200px at 85% 70%, #9cc6ee 0 60%, transparent 61%),
+      /* parken / groen */
+      radial-gradient(260px 200px at 70% 15%, #b5d9a8 0 55%, transparent 56%),
+      radial-gradient(200px 260px at 25% 80%, #c2e0b4 0 55%, transparent 56%),
+      radial-gradient(160px 120px at 55% 50%, #a9d49b 0 55%, transparent 56%),
+      /* bebouwing / oranje-beige vlakken */
+      radial-gradient(180px 140px at 40% 35%, #f2d9b0 0 55%, transparent 56%),
+      radial-gradient(150px 190px at 90% 35%, #eecfa4 0 55%, transparent 56%),
+      /* basiskleur */
+      linear-gradient(180deg, #eef1f4, #e6ebf0);
+  }
+  /* wegen */
+  .achtergrond::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(75deg, transparent 48.6%, #f7b267 48.6%, #f7b267 49.4%, transparent 49.4%),
+      linear-gradient(-30deg, transparent 58.6%, #ffffff 58.6%, #ffffff 59.6%, transparent 59.6%),
+      linear-gradient(15deg, transparent 28.7%, #f4845f 28.7%, #f4845f 29.2%, transparent 29.2%),
+      linear-gradient(115deg, transparent 68.7%, #ffffff 68.7%, #ffffff 69.2%, transparent 69.2%);
+  }
+  /* pins + plaatsnamen */
+  .pin { position: absolute; width: 30px; height: 40px; z-index: 1; }
+  .pin svg { filter: drop-shadow(0 3px 4px rgba(76,83,110,.45)); }
+  .label { position: absolute; font-size: 13px; color: #333; text-shadow: 0 1px 2px #fff; z-index: 1; }
+
+  /* ---- Varianten ---- */
+  .inhoud { position: relative; z-index: 2; max-width: 420px; margin: 0 auto; padding: 24px 16px 80px; }
+  h1 { font-size: 22px; margin: 0 0 4px; text-shadow: 0 1px 3px #fff; }
+  .uitleg { font-size: 14px; margin: 0 0 24px; color: #222; text-shadow: 0 1px 3px #fff; }
+  .variant { margin: 0 0 34px; }
+  .variant-naam {
+    display: inline-block; font-size: 13px; font-weight: 700; color: #fff;
+    background: #1d2433; border-radius: 999px; padding: 5px 12px; margin: 0 0 10px;
+  }
+  .popup {
+    border-radius: 16px; padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 2px;
+    box-shadow: 0 10px 32px rgba(0,0,0,.18);
+    border: 1px solid rgba(255,255,255,.65);
+  }
+  .popup .naam { font-size: 16px; font-weight: 700; color: #000; }
+  .popup .plaats { font-size: 14px; color: #000; }
+  .popup .adres { font-size: 13px; color: #555; }
+  .popup .tel { font-size: 14px; color: #006cd8; margin-top: 4px; text-decoration: none; }
+  .popup .acties { display: flex; gap: 8px; margin-top: 10px; }
+  .popup .btn { font-size: 13px; font-weight: 700; padding: 8px 14px; border-radius: 8px;
+    background: #006cd8; color: #fff; text-decoration: none; white-space: nowrap; }
+  .popup .btn.outline { background: rgba(255,255,255,.55); color: #006cd8; border: 1px solid #006cd8; }
+
+  /* 1 = huidig (referentie) */
+  .v1  { background: rgba(255,255,255,.62); -webkit-backdrop-filter: blur(16px) saturate(1.7); backdrop-filter: blur(16px) saturate(1.7); }
+  /* 2–7: steeds doorzichtiger, blur loopt mee omhoog */
+  .v2  { background: rgba(255,255,255,.50); -webkit-backdrop-filter: blur(16px) saturate(1.7); backdrop-filter: blur(16px) saturate(1.7); }
+  .v3  { background: rgba(255,255,255,.42); -webkit-backdrop-filter: blur(20px) saturate(1.8); backdrop-filter: blur(20px) saturate(1.8); }
+  .v4  { background: rgba(255,255,255,.35); -webkit-backdrop-filter: blur(24px) saturate(1.8); backdrop-filter: blur(24px) saturate(1.8); }
+  .v5  { background: rgba(255,255,255,.28); -webkit-backdrop-filter: blur(28px) saturate(2);   backdrop-filter: blur(28px) saturate(2); }
+  .v6  { background: rgba(255,255,255,.22); -webkit-backdrop-filter: blur(32px) saturate(2);   backdrop-filter: blur(32px) saturate(2); }
+  .v7  { background: rgba(255,255,255,.15); -webkit-backdrop-filter: blur(36px) saturate(2.2); backdrop-filter: blur(36px) saturate(2.2); }
+  /* 8: doorzichtig mét weinig blur — je ziet de kaart scherper */
+  .v8  { background: rgba(255,255,255,.30); -webkit-backdrop-filter: blur(10px) saturate(1.5); backdrop-filter: blur(10px) saturate(1.5); }
+  /* 9: gradient-glas (lichter bovenin, doorzichtiger onderin) */
+  .v9  { background: linear-gradient(135deg, rgba(255,255,255,.55), rgba(255,255,255,.18));
+         -webkit-backdrop-filter: blur(24px) saturate(1.8); backdrop-filter: blur(24px) saturate(1.8); }
+  /* 10: koel helder glas met lichte oplichting */
+  .v10 { background: rgba(250,251,253,.32); border-color: rgba(255,255,255,.85);
+         -webkit-backdrop-filter: blur(20px) saturate(1.4) brightness(1.12); backdrop-filter: blur(20px) saturate(1.4) brightness(1.12); }
+</style>
+</head>
+<body>
+  <div class="achtergrond"></div>
+  <div class="label" style="top:18%;left:8%">Rotterdam</div>
+  <div class="label" style="top:46%;left:62%">Utrecht</div>
+  <div class="label" style="top:74%;left:14%">Breda</div>
+
+  <div class="inhoud">
+    <h1>Glas-proeverij 🥂</h1>
+    <p class="uitleg">10 varianten van het popup-kaartje over een drukke kaartachtergrond. Nr. 1 is de huidige. Scroll en kies je favoriet.</p>
+    <div id="varianten"></div>
+  </div>
+
+  <script>
+    const namen = {
+      1: "1 — Huidig (62% wit, blur 16)",
+      2: "2 — 50% wit, blur 16",
+      3: "3 — 42% wit, blur 20",
+      4: "4 — 35% wit, blur 24",
+      5: "5 — 28% wit, blur 28",
+      6: "6 — 22% wit, blur 32",
+      7: "7 — 15% wit, blur 36 (maximaal doorzichtig)",
+      8: "8 — 30% wit, weinig blur (kaart blijft scherp)",
+      9: "9 — Gradient-glas (55% → 18%)",
+      10: "10 — Koel helder glas (32% + brightness)",
+    };
+    const houder = document.getElementById('varianten');
+    // Pin-svg naast elke kaart zodat je ook een pin door het glas ziet
+    const pinSvg = '<svg width="30" height="40" viewBox="0 0 32 42"><path d="M16 1C7.7 1 1 7.7 1 16c0 10.5 15 25 15 25s15-14.5 15-25C31 7.7 24.3 1 16 1z" fill="#006cd8"/><circle cx="16" cy="15.5" r="5.5" fill="#fff"/></svg>';
+    for (let i = 1; i <= 10; i++) {
+      houder.insertAdjacentHTML('beforeend', `
+        <div class="variant">
+          <span class="variant-naam">${namen[i]}</span>
+          <div style="position:relative">
+            <div class="pin" style="top:-6px;right:-4px;z-index:3">${pinSvg}</div>
+            <div class="popup v${i}">
+              <span class="naam">Pekaar</span>
+              <span class="plaats">Yerseke</span>
+              <span class="adres">Kanaalweg 83, 4401 PE Yerseke</span>
+              <a class="tel" href="#">0113 38 16 62</a>
+              <div class="acties">
+                <a class="btn" href="#">Bekijk dealer ›</a>
+                <a class="btn outline" href="#">Route</a>
+              </div>
+            </div>
+          </div>
+        </div>`);
+    }
+  </script>
+</body>
+</html>
