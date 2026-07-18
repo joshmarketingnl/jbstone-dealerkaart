@@ -432,6 +432,27 @@
   background: rgba(255, 255, 255, 0.94) !important;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.12) !important;
 }
+/* Sluitknop: gelijke afstand tot boven- en rechterrand van het kaartje. */
+.leaflet-container a.leaflet-popup-close-button {
+  top: 14px !important;
+  right: 14px !important;
+  width: 26px !important;
+  height: 26px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font: 400 20px/1 var(--jb-font) !important;
+  color: #667085 !important;
+  text-align: center !important;
+  border-radius: 50%;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: #000 !important;
+  background: rgba(0, 0, 0, 0.07);
+}
+
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .leaflet-popup-content-wrapper {
     background: rgba(255, 255, 255, 0.62) !important;
