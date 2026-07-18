@@ -144,6 +144,11 @@ function init() {
     deselect();
     map.closePopup();
     draw();
+    // Na hersortering hoort de dichtstbijzijnde meteen zichtbaar te zijn,
+    // ook als de gebruiker al door de lijst gescrold had. Bewust instant:
+    // smooth is op sommige containers/browsers een no-op en de lijst is
+    // toch net opnieuw gerenderd.
+    side.listEl.scrollTop = 0;
     side.setStatus(`Dichtstbijzijnde dealers bij ${labelHtml}`);
     side.setError('');
     currentFit = () => fitSearchResult(map, point, currentOrder);
@@ -194,6 +199,7 @@ function init() {
     deselect();
     map.closePopup();
     draw();
+    side.listEl.scrollTop = 0;
     side.setStatus('');
     side.setError('');
     currentFit = () => fitAllMarkers(map, [...registry.values()].map((r) => r.marker));
