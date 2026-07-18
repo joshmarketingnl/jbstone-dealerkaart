@@ -107,3 +107,27 @@ Pas als de nieuwe kaart op staging werkt:
 | Kaart kaapt paginascroll | Kan niet: scrollzoom staat uit tot de gebruiker op de kaart klikt |
 | Niets zichtbaar in Designer | Normaal: custom JS draait niet in het canvas. Test op staging of zet "Run custom code in Preview" aan (Site settings → Custom code) |
 | Dealer ontbreekt op kaart | lat/lng leeg of met komma i.p.v. punt → check console voor de warn met de slug |
+
+## Addendum (18-07-2026) — gebouwde structuur via MCP
+
+Stap 3/4 zijn headless uitgevoerd op de testpagina **/home-copy**. Afwijking t.o.v. het
+embed-snippet hierboven: de Webflow-API kan attribuutwaarden niet aan CMS-velden binden,
+daarom leest de bundle (v1.0.3+) de dealerdata ook uit **kindelementen**:
+
+```
+Collection Item
+└── div .jb-dealer
+    ├── a  (link naar collectiepagina, tekst = Name-veld)   ← crawlbaar
+    ├── div .jb-d-slug    (tekst ← Slug)
+    ├── div .jb-d-name    (tekst ← Name)
+    ├── div .jb-d-plaats  (tekst ← Locatie!)
+    ├── div .jb-d-straat  (tekst ← Adres, volledig adres in één string)
+    ├── div .jb-d-tel     (tekst ← Telefoon nummer)
+    ├── div .jb-d-lat     (tekst ← lat, API-slug "lat-2")
+    └── div .jb-d-lng     (tekst ← lng)
+```
+
+`data-url`/`data-postcode` zijn vervallen: de bundle leidt de url af (`/loactions/<slug>`)
+en toont het adres als één regel. De custom code staat in een **Embed ín de sectie**
+(niet in Page settings), zodat de hele sectie in één keer naar Home te kopiëren is.
+Testreferentie: `test/demo-webflow-structuur.html`.
