@@ -456,12 +456,12 @@
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .leaflet-popup-content-wrapper {
-    background: rgba(255, 255, 255, 0.5) !important;
+    background: rgba(255, 255, 255, 0.4) !important;
     -webkit-backdrop-filter: blur(14px) saturate(1.7);
     backdrop-filter: blur(14px) saturate(1.7);
   }
   .leaflet-popup-tip {
-    background: rgba(255, 255, 255, 0.5) !important;
+    background: rgba(255, 255, 255, 0.4) !important;
     -webkit-backdrop-filter: blur(14px) saturate(1.7);
     backdrop-filter: blur(14px) saturate(1.7);
   }
