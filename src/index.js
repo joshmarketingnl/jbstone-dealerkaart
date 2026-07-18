@@ -9,7 +9,7 @@
  * Zie WEBFLOW.md voor de integratie.
  */
 import { readDealers, offsetNearDuplicates } from './data.js';
-import { createMap, fitAllMarkers, fitSearchResult } from './map.js';
+import { createMap, fitAllMarkers, fitSearchResult, setOverlayRight, flyToFree, nlMaxBounds } from './map.js';
 import { createDealerMarker, createUserMarker, setMarkerState, esc } from './markers.js';
 import { buildSide, renderList } from './list.js';
 import { sortByNearest, sortByPlaats } from './distance.js';
@@ -26,6 +26,17 @@ function init() {
     return;
   }
 
+  // Overlay-layout (paneel zweeft over de kaart): dan mag focus alleen de
+  // vrije strook links gebruiken. Detectie op computed style, zodat de
+  // mediaquery (mobiel = gestapeld) vanzelf meeweegt.
+  let mapRef = null;
+  function updateOverlay() {
+    const zweeft = getComputedStyle(sideEl).position === 'absolute';
+    setOverlayRight(zweeft ? sideEl.offsetWidth + 48 : 0);
+    if (mapRef) mapRef.setMaxBounds(nlMaxBounds());
+  }
+  updateOverlay();
+
   // Zolang de gebruiker de kaart niet zelf heeft bediend, houden we de
   // "juiste" view vast en herstellen die na elke containerresize.
   let userInteracted = false;
@@ -34,8 +45,11 @@ function init() {
   mapEl.addEventListener('wheel', () => { userInteracted = true; });
 
   const map = createMap(mapEl, () => {
+    updateOverlay();
     if (!userInteracted && currentFit) currentFit();
   });
+  mapRef = map;
+  updateOverlay();
 
   // Registry: single source of truth voor de kaart↔lijst-koppeling (PRD §7.7).
   const registry = new Map(); // slug → { dealer, marker, row }
@@ -56,7 +70,10 @@ function init() {
 
   // Ná de eerste layout-pass, zodat de containermaat klopt vóór het zoomen
   // (anders berekent fitBounds een zoomniveau voor een verkeerd formaat).
-  currentFit = () => fitAllMarkers(map, [...registry.values()].map((r) => r.marker));
+  currentFit = () => {
+    updateOverlay();
+    fitAllMarkers(map, [...registry.values()].map((r) => r.marker));
+  };
   setTimeout(() => {
     map.invalidateSize();
     currentFit();
@@ -114,7 +131,7 @@ function init() {
     if (entry.marker) {
       setMarkerState(entry.marker, 'active');
       if (from === 'list') {
-        map.flyTo(entry.marker.getLatLng(), Math.max(map.getZoom(), 12), { duration: 0.8 });
+        flyToFree(map, entry.marker.getLatLng(), Math.max(map.getZoom(), 12));
         entry.marker.openPopup();
       }
     }
@@ -151,7 +168,10 @@ function init() {
     side.listEl.scrollTop = 0;
     side.setStatus(`Dichtstbijzijnde dealers bij ${labelHtml}`);
     side.setError('');
-    currentFit = () => fitSearchResult(map, point, currentOrder);
+    currentFit = () => {
+      updateOverlay();
+      fitSearchResult(map, point, currentOrder);
+    };
     currentFit();
   }
 
@@ -202,7 +222,10 @@ function init() {
     side.listEl.scrollTop = 0;
     side.setStatus('');
     side.setError('');
-    currentFit = () => fitAllMarkers(map, [...registry.values()].map((r) => r.marker));
+    currentFit = () => {
+      updateOverlay();
+      fitAllMarkers(map, [...registry.values()].map((r) => r.marker));
+    };
     currentFit();
   }
 

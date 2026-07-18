@@ -168,9 +168,10 @@
 /* ---------- zoekveld ---------- */
 .jb-search__label {
   display: block;
-  font-size: 16px;
+  font-size: 21px;
+  line-height: 1.25;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   color: #000;
 }
 
@@ -184,10 +185,14 @@
   min-width: 0;
   font: 400 16px var(--jb-font);
   padding: 12px 16px;
-  border: 1px solid #000;
+  border: 1px solid #cfd4dc;
   border-radius: 10px;
   background: #fff;
   color: #000;
+  transition: border-color 0.12s ease;
+}
+.jb-search__input:hover {
+  border-color: #9aa3b0;
 }
 .jb-search__input:focus-visible {
   outline: 2px solid var(--jb-blue);
@@ -216,7 +221,7 @@
 .jb-search__locate {
   padding: 12px 14px;
   background: #fff;
-  border: 1px solid #000;
+  border: 1px solid #cfd4dc;
   color: var(--jb-slate);
   display: flex;
   align-items: center;
@@ -268,9 +273,12 @@
   text-decoration: underline;
 }
 
-/* ---------- lijst ---------- */
+/* ---------- lijst: losse cards i.p.v. lijnen ---------- */
 .jb-list {
-  margin-top: 14px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .jb-list__item {
@@ -278,47 +286,54 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 17px 8px 17px 12px;
-  border-top: 1px solid var(--jb-rule);
+  padding: 14px 12px 14px 16px;
+  background: #fff;
+  border: 1px solid #e4e7ec;
+  border-radius: 14px;
   cursor: pointer;
-  transition: background-color 0.12s ease;
-}
-.jb-list__item:last-child {
-  border-bottom: 1px solid var(--jb-rule);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease,
+    background-color 0.12s ease;
 }
 .jb-list__item.is-hover,
 .jb-list__item:hover {
-  background: rgba(0, 108, 216, 0.05);
+  border-color: var(--jb-blue);
+  box-shadow: 0 2px 12px rgba(0, 108, 216, 0.1);
 }
 .jb-list__item.is-active {
-  background: rgba(0, 108, 216, 0.09);
+  background: rgba(0, 108, 216, 0.06);
+  border-color: var(--jb-blue);
 }
 .jb-list__item:focus-visible {
   outline: 2px solid var(--jb-blue);
-  outline-offset: -2px;
-  border-radius: 6px;
+  outline-offset: 2px;
 }
 
 .jb-list__plaats {
-  font: 700 19.2px/1.25 var(--jb-font);
+  font: 700 18px/1.25 var(--jb-font);
   margin: 0 0 2px;
   color: #000;
 }
 .jb-list__name {
-  font: 400 16px/1.4 var(--jb-font);
-  color: #000;
+  font: 400 15px/1.4 var(--jb-font);
+  color: #444;
 }
 
 .jb-list__meta {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   flex: 0 0 auto;
 }
 .jb-list__dist {
-  font-size: 14px;
-  color: #666;
+  font: 600 13px/1 var(--jb-font);
+  color: var(--jb-blue);
+  background: rgba(0, 108, 216, 0.08);
+  padding: 6px 10px;
+  border-radius: 999px;
   white-space: nowrap;
+}
+.jb-list__dist:empty {
+  display: none;
 }
 .jb-list__arrow {
   display: flex;

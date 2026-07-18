@@ -56,12 +56,40 @@ export function createMap(el, onResize) {
   return map;
 }
 
+/**
+ * Overlay-layout: als het zoek/lijst-paneel óver de kaart zweeft, moet alle
+ * focus (fitBounds, flyTo) doen alsof alleen de strook links ervan bestaat.
+ * index.js meet het paneel en zet hier het aantal pixels "bezet" rechts.
+ */
+let overlayRight = 0;
+export function setOverlayRight(px) {
+  overlayRight = Math.max(0, px | 0);
+}
+
+/**
+ * maxBounds passend bij de layout. Bij een overlay-paneel moet de kaart het
+ * land in de vrije linkerstrook centreren; op landzoom is de viewport dan
+ * breder dan de NL-begrenzing en hercentreert Leaflet altijd terug naar het
+ * midden. Daarom: overlay → geen maxBounds (de fit-functies herstellen de
+ * view toch bij elke zoekactie/reset).
+ */
+export function nlMaxBounds() {
+  return overlayRight > 0 ? null : NL_BOUNDS;
+}
+
 /** Zoomt zo dat alle dealer-pins in beeld staan. */
 export function fitAllMarkers(map, markers) {
   const withPos = markers.filter(Boolean);
   if (!withPos.length) return;
   const bounds = L.latLngBounds(withPos.map((m) => m.getLatLng()));
-  map.fitBounds(bounds, { padding: [40, 40] });
+  // animate: false — een animerende fit kan door een latere invalidateSize
+  // (ResizeObserver) halverwege worden afgekapt en dan blijft de kaart
+  // op een half-gepande view hangen.
+  map.fitBounds(bounds, {
+    paddingTopLeft: [40, 40],
+    paddingBottomRight: [40 + overlayRight, 40],
+    animate: false,
+  });
 }
 
 /** Zoomt naar het zoekpunt + de drie dichtstbijzijnde dealers (PRD §7.5). */
@@ -73,5 +101,16 @@ export function fitSearchResult(map, point, nearestDealers) {
       .slice(0, 3)
       .map((d) => [d.lat, d.lng]),
   ];
-  map.fitBounds(L.latLngBounds(pts), { padding: [60, 60], maxZoom: 12 });
+  map.fitBounds(L.latLngBounds(pts), {
+    paddingTopLeft: [60, 60],
+    paddingBottomRight: [60 + overlayRight, 60],
+    maxZoom: 12,
+    animate: false,
+  });
+}
+
+/** flyTo dat het punt centreert in de vrije (niet door het paneel bedekte) strook. */
+export function flyToFree(map, latlng, zoom) {
+  const targetPoint = map.project(latlng, zoom).add([overlayRight / 2, 0]);
+  map.flyTo(map.unproject(targetPoint, zoom), zoom, { duration: 0.8 });
 }
