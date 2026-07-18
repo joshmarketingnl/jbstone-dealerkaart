@@ -34,6 +34,26 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
+/* Desktop: kaart en lijst even hoog; de lijst scrolt intern.
+   Zo blijft de kaart altijd in beeld en wordt de sectie compact —
+   geen afhankelijkheid van sticky (breekt op overflow op Webflow-wrappers). */
+@media (min-width: 992px) {
+  #jb-side {
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    min-height: 420px;
+  }
+  .jb-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    padding-right: 6px;
+  }
+}
+
 @media (max-width: 991px) {
   .jb-locator {
     grid-template-columns: minmax(0, 1fr);

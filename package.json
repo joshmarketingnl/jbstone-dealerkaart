@@ -1,6 +1,6 @@
 {
   "name": "jbstone-dealerkaart",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "description": "Interactieve dealerkaart voor jbstone.nl \u2014 Leaflet + PDOK, keyless en gratis",
   "scripts": {
