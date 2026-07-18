@@ -16,7 +16,7 @@ const NL_BOUNDS = [
   [53.7, 7.4],
 ];
 
-export function createMap(el) {
+export function createMap(el, onResize) {
   const map = L.map(el, {
     center: [52.15, 5.3],
     zoom: 8,
@@ -43,9 +43,14 @@ export function createMap(el) {
   map.on('blur mouseout', () => map.scrollWheelZoom.disable());
 
   // Grijze-tegels-preventie (PRD §9.3): hermeten na init en bij elke layoutwijziging.
+  // onResize laat de caller opnieuw fitten — een fitBounds berekend op een
+  // verkeerde containermaat (laden mid-layout, Webflow-shifts) wordt zo gecorrigeerd.
   setTimeout(() => map.invalidateSize(), 0);
   if (typeof ResizeObserver !== 'undefined') {
-    new ResizeObserver(() => map.invalidateSize()).observe(el);
+    new ResizeObserver(() => {
+      map.invalidateSize();
+      if (onResize) onResize();
+    }).observe(el);
   }
 
   return map;

@@ -26,7 +26,16 @@ function init() {
     return;
   }
 
-  const map = createMap(mapEl);
+  // Zolang de gebruiker de kaart niet zelf heeft bediend, houden we de
+  // "juiste" view vast en herstellen die na elke containerresize.
+  let userInteracted = false;
+  let currentFit = null;
+  mapEl.addEventListener('pointerdown', () => { userInteracted = true; });
+  mapEl.addEventListener('wheel', () => { userInteracted = true; });
+
+  const map = createMap(mapEl, () => {
+    if (!userInteracted && currentFit) currentFit();
+  });
 
   // Registry: single source of truth voor de kaart↔lijst-koppeling (PRD §7.7).
   const registry = new Map(); // slug → { dealer, marker, row }
@@ -47,9 +56,10 @@ function init() {
 
   // Ná de eerste layout-pass, zodat de containermaat klopt vóór het zoomen
   // (anders berekent fitBounds een zoomniveau voor een verkeerd formaat).
+  currentFit = () => fitAllMarkers(map, [...registry.values()].map((r) => r.marker));
   setTimeout(() => {
     map.invalidateSize();
-    fitAllMarkers(map, [...registry.values()].map((r) => r.marker));
+    currentFit();
   }, 0);
 
   let selectedSlug = null;
@@ -93,6 +103,7 @@ function init() {
       }
     }
     selectedSlug = slug;
+    userInteracted = true; // een bewuste selectie mag niet worden weggeresized
     const entry = registry.get(slug);
     if (!entry) return;
 
@@ -135,7 +146,8 @@ function init() {
     draw();
     side.setStatus(`Dichtstbijzijnde dealers bij ${labelHtml}`);
     side.setError('');
-    fitSearchResult(map, point, currentOrder);
+    currentFit = () => fitSearchResult(map, point, currentOrder);
+    currentFit();
   }
 
   async function handleSearch(q) {
@@ -184,7 +196,8 @@ function init() {
     draw();
     side.setStatus('');
     side.setError('');
-    fitAllMarkers(map, [...registry.values()].map((r) => r.marker));
+    currentFit = () => fitAllMarkers(map, [...registry.values()].map((r) => r.marker));
+    currentFit();
   }
 
   draw();
