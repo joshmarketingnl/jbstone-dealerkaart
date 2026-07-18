@@ -124,15 +124,16 @@ function init() {
     const entry = registry.get(slug);
     if (!entry) return;
 
+    // Scrolt de lijst intern (desktop met vaste kaart) of via de pagina (mobiel)?
+    const lijst = side.listEl;
+    const scroltIntern =
+      lijst.scrollHeight > lijst.clientHeight + 4 &&
+      /(auto|scroll)/.test(getComputedStyle(lijst).overflowY);
+
     if (entry.row) {
       entry.row.classList.add('is-active');
-      // Alleen scrollen als de lijst een eigen scrollcontainer is (desktop).
-      // Op mobiel scrolt scrollIntoView de hele página en verdwijnt de kaart
-      // uit beeld zodra je een pin aanklikt.
-      const lijst = side.listEl;
-      const scroltIntern =
-        lijst.scrollHeight > lijst.clientHeight + 4 &&
-        /(auto|scroll)/.test(getComputedStyle(lijst).overflowY);
+      // Alleen binnen de eigen scrollcontainer scrollen; op mobiel zou
+      // scrollIntoView de hele pagina meesleuren en de kaart uit beeld duwen.
       if (scroltIntern) {
         entry.row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
@@ -145,6 +146,23 @@ function init() {
       const doelZoom = Math.max(map.getZoom(), from === 'list' ? 12 : 10);
       flyToFree(map, entry.marker.getLatLng(), doelZoom, 80);
       if (from === 'list') entry.marker.openPopup();
+    }
+    // Mobiel (lijst onder de kaart): na een tik op een lijstitem de pagina
+    // terugscrollen zodat de kaart mét popup precies bovenaan in beeld staat —
+    // net onder een sticky/fixed navbar, niet verder omhoog dan nodig.
+    if (from === 'list' && !scroltIntern) {
+      let offset = 8;
+      const nav = document.querySelector('.w-nav, nav');
+      if (nav) {
+        const pos = getComputedStyle(nav).position;
+        if (pos === 'fixed' || pos === 'sticky') offset += nav.offsetHeight;
+      }
+      const doelTop = Math.max(0, window.scrollY + mapEl.getBoundingClientRect().top - offset);
+      window.scrollTo({ top: doelTop, behavior: 'smooth' });
+      // Vangnet: smooth scroll is niet overal betrouwbaar — snap alsnog.
+      setTimeout(() => {
+        if (Math.abs(window.scrollY - doelTop) > 40) window.scrollTo(0, doelTop);
+      }, 700);
     }
   }
 
