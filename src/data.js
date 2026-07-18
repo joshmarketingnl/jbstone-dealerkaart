@@ -25,6 +25,9 @@ export function readDealers(root = document) {
       postcode: get('postcode'),
       tel: get('tel'),
       url: get('url'),
+      // Eigen Google Maps-link van de dealer (CMS-veld "Navigatie");
+      // popup-Route gebruikt deze en valt terug op coördinaten.
+      route: get('route'),
       lat: parseFloat(get('lat').replace(',', '.')),
       lng: parseFloat(get('lng').replace(',', '.')),
     };

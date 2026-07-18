@@ -42,7 +42,7 @@ function popupHtml(dealer) {
     tel +
     `<div class="jb-popup__actions">` +
     dealerLink +
-    `<a class="jb-popup__btn jb-popup__btn--outline" href="${routeUrl(dealer)}" target="_blank" rel="noopener">Route</a>` +
+    `<a class="jb-popup__btn jb-popup__btn--outline" href="${esc(dealer.route || routeUrl(dealer))}" target="_blank" rel="noopener">Route</a>` +
     `</div></div>`
   );
 }
