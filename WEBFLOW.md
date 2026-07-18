@@ -74,11 +74,11 @@ Vervang elke `*_VELD` door het echte CMS-veld via Webflow's field-insert. De `<a
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/joshmarketingnl/jbstone-dealerkaart@v1.1.1/dist/jbstone-map.min.css"/>
-<script src="https://cdn.jsdelivr.net/gh/joshmarketingnl/jbstone-dealerkaart@v1.1.1/dist/jbstone-map.min.js" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/joshmarketingnl/jbstone-dealerkaart@v1.1.2/dist/jbstone-map.min.css"/>
+<script src="https://cdn.jsdelivr.net/gh/joshmarketingnl/jbstone-dealerkaart@v1.1.2/dist/jbstone-map.min.js" defer></script>
 ```
 
-Page-level, niet site-wide (alleen deze pagina heeft de kaart nodig). Bij een nieuwe release: het versienummer `@v1.1.1` in beide jsDelivr-URL's ophogen.
+Page-level, niet site-wide (alleen deze pagina heeft de kaart nodig). Bij een nieuwe release: het versienummer `@v1.1.2` in beide jsDelivr-URL's ophogen.
 
 ## Stap 5 — Oude elementen verwijderen
 

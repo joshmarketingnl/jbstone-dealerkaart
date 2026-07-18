@@ -413,25 +413,33 @@
 }
 
 /* ---------- popup: glaskaartje ----------
-   Expliciete achtergrond is verplicht: sommige site-CSS (Webflow-resets)
-   sloopt de standaard witte popup-achtergrond van Leaflet. */
+   !important is hier bewust: de site heeft oude NoCodeFlow-resets in de
+   site-wide custom code (".leaflet-popup-content-wrapper { background:
+   transparent !important; … }") die anders elke popup-achtergrond slopen.
+   Onze stylesheet laadt later in het document, dus !important + latere
+   volgorde wint. Mag weer zonder zodra stap 0 (NCF-code verwijderen) is
+   uitgevoerd, maar kan ook gewoon blijven staan. */
 .leaflet-popup-content-wrapper {
-  background: rgba(255, 255, 255, 0.94); /* fallback zonder backdrop-filter */
-  border: 1px solid rgba(255, 255, 255, 0.65);
-  border-radius: 16px;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.94) !important; /* fallback zonder backdrop-filter */
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.18) !important;
+}
+.leaflet-popup-content {
+  margin: 16px 18px !important;
 }
 .leaflet-popup-tip {
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.12) !important;
 }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .leaflet-popup-content-wrapper {
-    background: rgba(255, 255, 255, 0.62);
+    background: rgba(255, 255, 255, 0.62) !important;
     -webkit-backdrop-filter: blur(16px) saturate(1.7);
     backdrop-filter: blur(16px) saturate(1.7);
   }
   .leaflet-popup-tip {
-    background: rgba(255, 255, 255, 0.62);
+    background: rgba(255, 255, 255, 0.62) !important;
     -webkit-backdrop-filter: blur(16px) saturate(1.7);
     backdrop-filter: blur(16px) saturate(1.7);
   }
