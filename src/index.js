@@ -126,14 +126,25 @@ function init() {
 
     if (entry.row) {
       entry.row.classList.add('is-active');
-      entry.row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      // Alleen scrollen als de lijst een eigen scrollcontainer is (desktop).
+      // Op mobiel scrolt scrollIntoView de hele página en verdwijnt de kaart
+      // uit beeld zodra je een pin aanklikt.
+      const lijst = side.listEl;
+      const scroltIntern =
+        lijst.scrollHeight > lijst.clientHeight + 4 &&
+        /(auto|scroll)/.test(getComputedStyle(lijst).overflowY);
+      if (scroltIntern) {
+        entry.row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     }
     if (entry.marker) {
       setMarkerState(entry.marker, 'active');
-      if (from === 'list') {
-        flyToFree(map, entry.marker.getLatLng(), Math.max(map.getZoom(), 12));
-        entry.marker.openPopup();
-      }
+      // Bij elke selectie licht inzoomen en de pin iets onder het midden
+      // zetten, zodat de popup er volledig boven past — ook bij randpins
+      // waar Leaflets autoPan vastloopt op de kaartbegrenzing.
+      const doelZoom = Math.max(map.getZoom(), from === 'list' ? 12 : 10);
+      flyToFree(map, entry.marker.getLatLng(), doelZoom, 80);
+      if (from === 'list') entry.marker.openPopup();
     }
   }
 
@@ -177,36 +188,71 @@ function init() {
 
   async function handleSearch(q) {
     side.setBusy(true);
+    let result;
     try {
-      const result = await geocode(q);
-      if (result === undefined) return; // afgebroken door nieuwere zoekopdracht
-      if (result === null) {
-        side.setError(`We konden '${q}' niet vinden. Probeer een plaatsnaam of postcode.`);
-        return;
-      }
-      applyLocation(result, `<strong>${esc(result.label)}</strong>`);
+      result = await geocode(q);
     } catch (err) {
       console.warn('[jbstone-map] Zoeken mislukt:', err);
       side.setError('Zoeken lukt even niet. Probeer het opnieuw.');
-    } finally {
       side.setBusy(false);
+      return;
+    }
+    side.setBusy(false);
+    if (result === undefined) return; // afgebroken door nieuwere zoekopdracht
+    if (result === null) {
+      side.setError(`We konden '${q}' niet vinden. Probeer een plaatsnaam of postcode.`);
+      return;
+    }
+    // Fouten bij het toepassen zijn géén zoekfout: niet als zodanig melden.
+    try {
+      applyLocation(result, `<strong>${esc(result.label)}</strong>`);
+    } catch (err) {
+      console.warn('[jbstone-map] Zoekresultaat toepassen mislukt:', err);
     }
   }
 
+  // Teller voorkomt dat een oude, mislukte locatiepoging een foutmelding
+  // over een nieuwere gelukte poging heen zet (dubbel tikken op mobiel).
+  let locatePoging = 0;
+
   async function handleLocate() {
+    const poging = ++locatePoging;
     side.setBusy(true);
     side.setError('');
+
+    let pos = null;
+    let fout = null;
     try {
-      const pos = await geolocate();
-      applyLocation(pos, '<strong>jouw locatie</strong>');
+      pos = await geolocate();
     } catch (err) {
-      if (err && err.code === 1 /* PERMISSION_DENIED */) {
+      fout = err;
+      // iOS geeft geregeld eenmalig "location unknown" terwijl een directe
+      // tweede poging wél slaagt — stille retry (niet bij geweigerd).
+      if (!err || err.code !== 1 /* PERMISSION_DENIED */) {
+        try {
+          pos = await geolocate();
+          fout = null;
+        } catch (err2) {
+          fout = err2;
+        }
+      }
+    }
+    side.setBusy(false);
+    if (poging !== locatePoging) return; // ingehaald door nieuwere poging
+
+    if (!pos) {
+      if (fout && fout.code === 1) {
         side.setError('Je hebt locatietoegang geweigerd. Vul hierboven je plaats of postcode in.');
       } else {
         side.setError('We konden je locatie niet bepalen. Vul je plaats of postcode in.');
       }
-    } finally {
-      side.setBusy(false);
+      return;
+    }
+    // Fouten bij het toepassen zijn géén locatiefout: niet als zodanig melden.
+    try {
+      applyLocation(pos, '<strong>jouw locatie</strong>');
+    } catch (err) {
+      console.warn('[jbstone-map] Locatie toepassen mislukt:', err);
     }
   }
 

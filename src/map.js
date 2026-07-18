@@ -109,8 +109,21 @@ export function fitSearchResult(map, point, nearestDealers) {
   });
 }
 
-/** flyTo dat het punt centreert in de vrije (niet door het paneel bedekte) strook. */
-export function flyToFree(map, latlng, zoom) {
-  const targetPoint = map.project(latlng, zoom).add([overlayRight / 2, 0]);
-  map.flyTo(map.unproject(targetPoint, zoom), zoom, { duration: 0.8 });
+/**
+ * flyTo dat het punt centreert in de vrije (niet door het paneel bedekte)
+ * strook. yOffset schuift de pin ónder het visuele midden zodat de popup
+ * erboven volledig in beeld past (belangrijk op mobiel en bij randpins —
+ * autoPan kan daar niets doen omdat maxBounds het pannen begrenst).
+ */
+export function flyToFree(map, latlng, zoom, yOffset = 0) {
+  const targetPoint = map.project(latlng, zoom).add([overlayRight / 2, -yOffset]);
+  const doel = map.unproject(targetPoint, zoom);
+  map.flyTo(doel, zoom, { duration: 0.8 });
+  // Vangnet: de animatie kan worden afgebroken (rAF-throttling, een
+  // tussentijdse invalidateSize). Niet aangekomen? Dan alsnog snappen.
+  setTimeout(() => {
+    if (Math.abs(map.getZoom() - zoom) > 0.01 || map.getCenter().distanceTo(doel) > 100) {
+      map.setView(doel, zoom, { animate: false });
+    }
+  }, 1000);
 }

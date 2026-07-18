@@ -65,8 +65,10 @@ export function createDealerMarker(dealer) {
   marker.bindPopup(popupHtml(dealer), {
     closeButton: true,
     maxWidth: 260,
-    autoPan: true,
-    autoPanPadding: [20, 20],
+    // autoPan uit: de widget centreert zelf (flyToFree met popup-offset).
+    // autoPan zou die animatie direct afbreken én loopt bij randpins vast
+    // op de kaartbegrenzing.
+    autoPan: false,
   });
   return marker;
 }

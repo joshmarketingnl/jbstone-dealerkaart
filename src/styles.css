@@ -280,7 +280,8 @@
   color: #b3261e;
 }
 
-.jb-side.is-busy .jb-search__btn {
+.jb-side.is-busy .jb-search__btn,
+.jb-side.is-busy .jb-search__locate {
   opacity: 0.6;
   pointer-events: none;
 }
