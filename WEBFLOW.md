@@ -131,3 +131,10 @@ Collection Item
 en toont het adres als één regel. De custom code staat in een **Embed ín de sectie**
 (niet in Page settings), zodat de hele sectie in één keer naar Home te kopiëren is.
 Testreferentie: `test/demo-webflow-structuur.html`.
+
+Let op: de API kan géén "Current Location"-link of veldtokens in een Embed zetten
+(tokens renderen letterlijk). De verborgen lijst bevat daarom geen statische
+<a> naar de dealerpagina; de zichtbare links (lijstpijlen, popup) komen uit de
+bundle en dealerpagina's staan in de sitemap. Wil je tóch een statische
+crawl-link: voeg in de Designer in het Collection Item een Text Link toe en zet
+"Link to" op **Current Location** (10 seconden handwerk).
