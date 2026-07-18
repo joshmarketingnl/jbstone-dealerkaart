@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JB Stone Dealers — demo</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="dist/jbstone-map.min.css">
+  <style>
+    /* Alleen demo-chrome; alles binnen .jb-locator komt uit de bundle-css. */
+    body { margin: 0; background: #fff; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #000; }
+    .demo-container { max-width: 1280px; margin: 0 auto; padding: 48px 24px 96px; }
+    .demo-kicker { text-align: center; font-size: 16px; margin: 0 0 4px; }
+    .demo-title { text-align: center; font-size: 36px; font-weight: 700; margin: 0 0 40px; }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <p class="demo-kicker">Hier kun je ons vinden</p>
+    <h2 class="demo-title">JB Stone Dealers</h2>
+
+    <div class="jb-locator">
+      <div id="jb-map"></div>
+      <div id="jb-side"></div>
+    </div>
+
+    <!-- Databron: in Webflow is dit de verborgen Collection List (zie WEBFLOW.md) -->
+    <div class="jb-dealerdata" aria-hidden="true">
+      <div class="jb-dealer"
+           data-slug="buiter-beton-balkbrug"
+           data-name="Buiter Beton"
+           data-plaats="Balkbrug"
+           data-straat="Hoogeveenseweg 27"
+           data-postcode="7707 CG"
+           data-tel="0523 657 000"
+           data-lat="52.603141"
+           data-lng="6.39437"
+           data-url="/loactions/buiter-beton-balkbrug">
+        <a href="/loactions/buiter-beton-balkbrug">Buiter Beton — Balkbrug, Hoogeveenseweg 27, 7707 CG</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="tegelhandelboer-capelle-aan-den-yssel"
+           data-name="Tegelhandelboer"
+           data-plaats="Capelle aan den IJssel"
+           data-straat="Bermweg 550"
+           data-postcode="2907 LE"
+           data-tel="0180 39 17 17"
+           data-lat="51.946694"
+           data-lng="4.596949"
+           data-url="/loactions/tegelhandelboer-capelle-aan-den-yssel">
+        <a href="/loactions/tegelhandelboer-capelle-aan-den-yssel">Tegelhandelboer — Capelle aan den IJssel, Bermweg 550, 2907 LE</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="livingstone"
+           data-name="Livingstone"
+           data-plaats="Goes"
+           data-straat="Livingstoneweg 2"
+           data-postcode="4462 GL"
+           data-tel="0113 222 000"
+           data-lat="51.492267"
+           data-lng="3.88093"
+           data-url="/loactions/livingstone">
+        <a href="/loactions/livingstone">Livingstone — Goes, Livingstoneweg 2, 4462 GL</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="buiter-beton-heemskerk"
+           data-name="Buiter Beton"
+           data-plaats="Heemskerk"
+           data-straat="Ambachtsring 13"
+           data-postcode="1969 NH"
+           data-tel="0251 232 314"
+           data-lat="52.500918"
+           data-lng="4.652656"
+           data-url="/loactions/buiter-beton-heemskerk">
+        <a href="/loactions/buiter-beton-heemskerk">Buiter Beton — Heemskerk, Ambachtsring 13, 1969 NH</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="buiter-beton-hengelo"
+           data-name="Buiter Beton"
+           data-plaats="Hengelo"
+           data-straat="Torenlaan 38"
+           data-postcode="7559 PJ"
+           data-tel="0742 776 079"
+           data-lat="52.283728"
+           data-lng="6.81078"
+           data-url="/loactions/buiter-beton-hengelo">
+        <a href="/loactions/buiter-beton-hengelo">Buiter Beton — Hengelo, Torenlaan 38, 7559 PJ</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="sloos-tegels"
+           data-name="Sloos Tegels"
+           data-plaats="Leiden"
+           data-straat="Admiraal Helfrichweg 1"
+           data-postcode="2315 VC"
+           data-tel="071 71 13 434"
+           data-lat="52.159579"
+           data-lng="4.512428"
+           data-url="/loactions/sloos-tegels">
+        <a href="/loactions/sloos-tegels">Sloos Tegels — Leiden, Admiraal Helfrichweg 1, 2315 VC</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="buiter-beton-naarden"
+           data-name="Buiter Beton"
+           data-plaats="Naarden"
+           data-straat="Rijksweg 91"
+           data-postcode="1411 SK"
+           data-tel="0356 910 245"
+           data-lat="52.310051"
+           data-lng="5.123154"
+           data-url="/loactions/buiter-beton-naarden">
+        <a href="/loactions/buiter-beton-naarden">Buiter Beton — Naarden, Rijksweg 91, 1411 SK</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="tegelhandelboer-nieuw-lekkerland"
+           data-name="Tegelhandelboer"
+           data-plaats="Nieuw-Lekkerland"
+           data-straat="Planetenlaan 75"
+           data-postcode="2957 SM"
+           data-tel="0184 682 866"
+           data-lat="51.887001"
+           data-lng="4.679211"
+           data-url="/loactions/tegelhandelboer-nieuw-lekkerland">
+        <a href="/loactions/tegelhandelboer-nieuw-lekkerland">Tegelhandelboer — Nieuw-Lekkerland, Planetenlaan 75, 2957 SM</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="j-j-van-gurp"
+           data-name="J &amp; J van Gurp"
+           data-plaats="Ooltgensplaat"
+           data-straat="Oudedijk 14"
+           data-postcode="3257 LM"
+           data-tel="0187 631 350"
+           data-lat="51.679172"
+           data-lng="4.333736"
+           data-url="/loactions/j-j-van-gurp">
+        <a href="/loactions/j-j-van-gurp">J &amp; J van Gurp — Ooltgensplaat, Oudedijk 14, 3257 LM</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="tegelhandelboer-raamsdonksveer"
+           data-name="Tegelhandelboer"
+           data-plaats="Raamsdonksveer"
+           data-straat="Oosterhoutseweg 73 D"
+           data-postcode="4941 WX"
+           data-tel="0162 520 590"
+           data-lat="51.6823"
+           data-lng="4.87796"
+           data-url="/loactions/tegelhandelboer-raamsdonksveer">
+        <a href="/loactions/tegelhandelboer-raamsdonksveer">Tegelhandelboer — Raamsdonksveer, Oosterhoutseweg 73 D, 4941 WX</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="tegelhandelboer-ridderkerk"
+           data-name="Tegelhandelboer"
+           data-plaats="Ridderkerk"
+           data-straat="Rijksstraatweg 160A"
+           data-postcode="2988 BM"
+           data-tel="0180 426 333"
+           data-lat="51.856897"
+           data-lng="4.573718"
+           data-url="/loactions/tegelhandelboer-ridderkerk">
+        <a href="/loactions/tegelhandelboer-ridderkerk">Tegelhandelboer — Ridderkerk, Rijksstraatweg 160A, 2988 BM</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="den-engelsman-tuinmaterialen"
+           data-name="Den Engelsman Tuinmaterialen"
+           data-plaats="Sint-Annaland"
+           data-straat="Veilingweg 9"
+           data-postcode="4697 RB"
+           data-tel="0166 653 190"
+           data-lat="51.596459"
+           data-lng="4.109105"
+           data-url="/loactions/den-engelsman-tuinmaterialen">
+        <a href="/loactions/den-engelsman-tuinmaterialen">Den Engelsman Tuinmaterialen — Sint-Annaland, Veilingweg 9, 4697 RB</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="tegelhandelboer-standdaarbuiten"
+           data-name="Tegelhandelboer"
+           data-plaats="Standdaarbuiten"
+           data-straat="Molenstraat 34"
+           data-postcode="4758 AB"
+           data-tel="0165 316 296"
+           data-lat="51.612292"
+           data-lng="4.520915"
+           data-url="/loactions/tegelhandelboer-standdaarbuiten">
+        <a href="/loactions/tegelhandelboer-standdaarbuiten">Tegelhandelboer — Standdaarbuiten, Molenstraat 34, 4758 AB</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="biesheuvel-groenprojecten"
+           data-name="Biesheuvel Groenprojecten"
+           data-plaats="Strijen"
+           data-straat="Weelsedijk 61C"
+           data-postcode="3291 LR"
+           data-tel="+31 6 365 653 63"
+           data-lat="51.730967"
+           data-lng="4.530712"
+           data-url="/loactions/biesheuvel-groenprojecten">
+        <a href="/loactions/biesheuvel-groenprojecten">Biesheuvel Groenprojecten — Strijen, Weelsedijk 61C, 3291 LR</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="van-der-heijden-sierbestrating"
+           data-name="Van Der Heijden Sierbestrating"
+           data-plaats="Wouw"
+           data-straat="Donkenweg 7"
+           data-postcode="4724 SN"
+           data-tel="0165 303 686"
+           data-lat="51.527996"
+           data-lng="4.3909"
+           data-url="/loactions/van-der-heijden-sierbestrating">
+        <a href="/loactions/van-der-heijden-sierbestrating">Van Der Heijden Sierbestrating — Wouw, Donkenweg 7, 4724 SN</a>
+      </div>
+      <div class="jb-dealer"
+           data-slug="pekaar"
+           data-name="Pekaar"
+           data-plaats="Yerseke"
+           data-straat="Kanaalweg 83"
+           data-postcode="4401 PE"
+           data-tel="0113 38 16 62"
+           data-lat="51.479708"
+           data-lng="4.007493"
+           data-url="/loactions/pekaar">
+        <a href="/loactions/pekaar">Pekaar — Yerseke, Kanaalweg 83, 4401 PE</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="dist/jbstone-map.min.js" defer></script>
+</body>
+</html>
