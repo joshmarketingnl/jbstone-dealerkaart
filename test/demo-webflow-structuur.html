@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test — Webflow-structuur (kindelementen i.p.v. data-attributen)</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="../dist/jbstone-map.min.css">
+  <style>
+    body { margin: 0; background: #fff; font-family: system-ui, sans-serif; }
+    .demo-container { max-width: 1280px; margin: 0 auto; padding: 48px 24px 96px; }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <h2>Test: Webflow MCP-structuur</h2>
+
+    <div class="jb-locator">
+      <div id="jb-map"></div>
+      <div id="jb-side"></div>
+    </div>
+
+    <!-- Exact wat de Webflow Collection List gaat renderen:
+         geen data-attributen, alleen kindelementen met class jb-d-* ,
+         adres als één string (CMS-veld "Adres"), geen postcode, geen url. -->
+    <div class="jb-dealerdata" aria-hidden="true">
+      <div role="listitem">
+        <div class="jb-dealer">
+          <div class="jb-d-slug">buiter-beton-balkbrug</div>
+          <div class="jb-d-name">Buiter Beton</div>
+          <div class="jb-d-plaats">Balkbrug</div>
+          <div class="jb-d-straat">Hoogeveenseweg 27, 7707 CG Balkbrug</div>
+          <div class="jb-d-tel">0523 657 000</div>
+          <div class="jb-d-lat">52.603141</div>
+          <div class="jb-d-lng">6.394370</div>
+          <a href="/loactions/buiter-beton-balkbrug">Buiter Beton</a>
+        </div>
+      </div>
+      <div role="listitem">
+        <div class="jb-dealer">
+          <div class="jb-d-slug">pekaar</div>
+          <div class="jb-d-name">Pekaar</div>
+          <div class="jb-d-plaats">Yerseke</div>
+          <div class="jb-d-straat">Kanaalweg 83, 4401 PE Yerseke</div>
+          <div class="jb-d-tel">0113 38 16 62</div>
+          <div class="jb-d-lat">51.479708</div>
+          <div class="jb-d-lng">4.007493</div>
+          <a href="/loactions/pekaar">Pekaar</a>
+        </div>
+      </div>
+      <div role="listitem">
+        <!-- Dealer zonder coördinaten: moet wél in de lijst, geen pin, geen errors -->
+        <div class="jb-dealer">
+          <div class="jb-d-slug">de-vliert-sierbestrating-en-tuinhout</div>
+          <div class="jb-d-name">De Vliert Sierbestrating en Tuinhout</div>
+          <div class="jb-d-plaats">Breda</div>
+          <div class="jb-d-straat">Baarschot 19, 4817 ZZ Breda</div>
+          <div class="jb-d-tel">076 571 0008</div>
+          <div class="jb-d-lat"></div>
+          <div class="jb-d-lng"></div>
+          <a href="/loactions/de-vliert-sierbestrating-en-tuinhout">De Vliert</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="../dist/jbstone-map.min.js" defer></script>
+</body>
+</html>

@@ -8,16 +8,25 @@ export function readDealers(root = document) {
   const dealers = [];
 
   els.forEach((el) => {
+    // Primair: data-attributen. Fallback: kindelementen met class jb-d-<veld>
+    // (tekst gebonden aan CMS-velden; de Webflow-API kan attribuutwaarden
+    // niet aan CMS-velden binden, tekst wél).
+    const get = (key) => {
+      const v = el.dataset[key];
+      if (v) return v.trim();
+      const child = el.querySelector(`.jb-d-${key}`);
+      return child ? child.textContent.trim() : '';
+    };
     const d = {
-      slug: (el.dataset.slug || '').trim(),
-      name: (el.dataset.name || '').trim(),
-      plaats: (el.dataset.plaats || '').trim(),
-      straat: (el.dataset.straat || '').trim(),
-      postcode: (el.dataset.postcode || '').trim(),
-      tel: (el.dataset.tel || '').trim(),
-      url: (el.dataset.url || '').trim(),
-      lat: parseFloat(String(el.dataset.lat || '').replace(',', '.')),
-      lng: parseFloat(String(el.dataset.lng || '').replace(',', '.')),
+      slug: get('slug'),
+      name: get('name'),
+      plaats: get('plaats'),
+      straat: get('straat'),
+      postcode: get('postcode'),
+      tel: get('tel'),
+      url: get('url'),
+      lat: parseFloat(get('lat').replace(',', '.')),
+      lng: parseFloat(get('lng').replace(',', '.')),
     };
 
     // Sanity-check: geldige getallen én binnen (ruim) Nederland.
